@@ -9,6 +9,8 @@
  * 
  */
 
+#ifndef _NYK_STACK
+#define _NYK_STACK
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -63,3 +65,5 @@ void* nyk_stack_pop(nyk_stack* stack);
  * @return false if the stack was not fully destroyed
  */
 bool nyk_stack_destroy(nyk_stack* stack);
+
+#endif // _NYK_STACK
