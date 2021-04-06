@@ -50,3 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Bazel build artifacts
+bazel-*
+
+# IDE settings
+.vscode

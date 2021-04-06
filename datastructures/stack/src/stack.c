@@ -1,4 +1,4 @@
-#include "stack.h"
+#include "../headers/stack.h"
 
 nyk_stack nyk_stack_make(size_t item_size, size_t stack_length) {
     void* stack_array = malloc(item_size * stack_length);
@@ -22,7 +22,7 @@ bool nyk_stack_push(nyk_stack* stack, void* item) {
     return false;
 }
 
-void* nyk_stack_pop(nyk_stack* stack, void* item) {
+void* nyk_stack_pop(nyk_stack* stack) {
     if (stack->top == NYK_STACK_EMPTY) {
         return NULL;
     }
@@ -35,4 +35,5 @@ void* nyk_stack_pop(nyk_stack* stack, void* item) {
 bool nyk_stack_destroy(nyk_stack* stack) {
     stack->items = NULL;
     free(stack->items);
+    return true;
 }
