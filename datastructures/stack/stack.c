@@ -37,11 +37,11 @@ void* nyk_stack_pop(nyk_stack* stack) {
 }
 
 bool nyk_stack_destroy(nyk_stack* stack) {
-    stack->items = NULL;
     free(stack->items);
+    stack->items = NULL;
 
-    stack = NULL;
     free(stack);
-    
+    stack = NULL;
+
     return true;
 }

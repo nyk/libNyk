@@ -11,7 +11,7 @@ TEST(StackTest, StackMake) {
   nyk_stack_destroy(stack);
 }
 
-TEST(StackTest, StackPush) {
+TEST(StackTest, StackPushOptimist) {
   nyk_stack* stack = nyk_stack_make(3, sizeof(int*));
   EXPECT_EQ(stack->length, 3);
   EXPECT_EQ(stack->top, NYK_STACK_EMPTY);
@@ -32,7 +32,7 @@ TEST(StackTest, StackPush) {
    nyk_stack_destroy(stack);
 }
 
-TEST(StackTest, StackPopOptimism) {
+TEST(StackTest, StackPopOptimist) {
   nyk_stack* stack = nyk_stack_make(4, sizeof(int*));
 
   // Initialize stack array
