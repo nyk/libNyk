@@ -1,5 +1,4 @@
 #include "stack.h"
-#include <stdio.h>
 
 typedef struct nsp {
     size_t length;
@@ -18,6 +17,35 @@ nyk_stack* nyk_stack_make(size_t stack_length, size_t item_size) {
     return stack;
 }
 
+bool nyk_stack_push(nyk_stack* stack, void* item) {
+    stack->top++;
+
+    if (stack->top < stack->length) {
+        stack->items[stack->top] = item;
+        return true;
+    }
+
+    return false;
+}
+
+void* nyk_stack_pop(nyk_stack* stack) {
+    if (stack->top != NYK_STACK_EMPTY) {
+        void* item = stack->items[stack->top];
+        stack->top--;
+        return item;
+    }
+
+    return NULL;
+}
+
+void nyk_stack_destroy(nyk_stack* stack) {
+    free(stack->items);
+    free(stack);
+}
+
+
+/* !!! FUNCTIONS FOR USE BY TEST SUITES ONLY !!! */
+
 bool nyk_stack_chk_pos(nyk_stack* stack, size_t val) {
     return (stack->top == val);
 }
@@ -32,34 +60,4 @@ size_t nyk_stack_top(nyk_stack* stack) {
 
 void* nyk_stack_item(nyk_stack* stack, size_t index ) {
     return stack->items[index];
-}
-
-size_t nyk_stack_push(nyk_stack* stack, void* item) {
-    stack->top++;
-
-    if (stack->top < stack->length) {
-        stack->items[stack->top] = item;
-    }
-
-    return stack->top;
-}
-
-void* nyk_stack_pop(nyk_stack* stack) {
-    if (stack->top == NYK_STACK_EMPTY) {
-        return NULL;
-    }
-
-    void* item = stack->items[stack->top];
-    stack->top--;
-    return item;
-}
-
-bool nyk_stack_destroy(nyk_stack* stack) {
-    free(stack->items);
-    stack->items = NULL;
-
-    free(stack);
-    stack = NULL;
-
-    return true;
 }

@@ -5,40 +5,49 @@ extern "C" {
 }
 
 TEST(StackTest, StackMake) {
-  nyk_stack* stack = nyk_stack_make(10, sizeof(int*));
+  size_t capacity = 10;
+  nyk_stack* stack = nyk_stack_make(capacity, sizeof(int*));
   EXPECT_TRUE(nyk_stack_chk_pos(stack, NYK_STACK_EMPTY));
-  EXPECT_TRUE(nyk_stack_chk_cap(stack, 10));
+  EXPECT_TRUE(nyk_stack_chk_cap(stack, capacity));
   nyk_stack_destroy(stack);
 }
 
 
 TEST(StackTest, StackPushOptimist) {
+  size_t capacity = 3;
   nyk_stack* stack = nyk_stack_make(3, sizeof(int*));
-  EXPECT_TRUE(nyk_stack_chk_cap(stack, 3));
+  EXPECT_TRUE(nyk_stack_chk_cap(stack, capacity));
   EXPECT_TRUE(nyk_stack_chk_pos(stack, NYK_STACK_EMPTY));
 
   int a, b, c, d;
-  size_t rv = nyk_stack_push(stack, &(a = 6));
-  EXPECT_TRUE(nyk_stack_chk_pos(stack, rv));
+  EXPECT_TRUE(nyk_stack_push(stack, &(a = 6)));
   EXPECT_TRUE(nyk_stack_chk_pos(stack, 0));
 
-  size_t top = nyk_stack_top(stack);
-  int item = *(int*)nyk_stack_item(stack, top);
+  size_t idx = nyk_stack_top(stack);
+  int item = *(int*)nyk_stack_item(stack, idx);
   EXPECT_EQ(item, a);
 
   nyk_stack_push(stack, &(b = 8));
-  top = nyk_stack_top(stack);
-  item = *(int*)nyk_stack_item(stack, top);
+  idx = nyk_stack_top(stack);
+  item = *(int*)nyk_stack_item(stack, idx);
   EXPECT_EQ(item, b);
 
   nyk_stack_push(stack, &(c = 8));
-  top = nyk_stack_top(stack);
-  item = *(int*)nyk_stack_item(stack, top);
+  idx = nyk_stack_top(stack);
+  item = *(int*)nyk_stack_item(stack, idx);
   EXPECT_EQ(item, c);
 
   nyk_stack_destroy(stack);
 }
 
+TEST(StackTest, StackPushPessimist) {
+  int a, b, c;
+  nyk_stack* stack = nyk_stack_make(2, sizeof(int*));
+  EXPECT_TRUE(nyk_stack_push(stack, &(a = 1)));
+  EXPECT_TRUE(nyk_stack_push(stack, &(b = 2)));
+  EXPECT_FALSE(nyk_stack_push(stack, &(c = 3)));
+  nyk_stack_destroy(stack);
+}
 
 TEST(StackTest, StackPopOptimist) {
   nyk_stack* stack = nyk_stack_make(4, sizeof(int*));
@@ -67,4 +76,12 @@ TEST(StackTest, StackPopOptimist) {
   EXPECT_EQ(nyk_stack_top(stack), 1);
 
   nyk_stack_destroy(stack);
+}
+
+TEST(StackTest, StackPopPessimist) {
+  int a;
+  nyk_stack* stack = nyk_stack_make(1, sizeof(int*));
+  nyk_stack_push(stack, &(a = 1));
+  EXPECT_TRUE(*(int*)nyk_stack_pop(stack), 1);
+  EXPECT_FALSE((int*)nyk_stack_pop(stack));
 }
