@@ -6,31 +6,39 @@ extern "C" {
 
 TEST(StackTest, StackMake) {
   nyk_stack* stack = nyk_stack_make(10, sizeof(int*));
-  EXPECT_EQ(stack->top, NYK_STACK_EMPTY);
-  EXPECT_EQ(stack->length, 10);
+  EXPECT_TRUE(nyk_stack_chk_pos(stack, NYK_STACK_EMPTY));
+  EXPECT_TRUE(nyk_stack_chk_cap(stack, 10));
   nyk_stack_destroy(stack);
 }
 
+
 TEST(StackTest, StackPushOptimist) {
   nyk_stack* stack = nyk_stack_make(3, sizeof(int*));
-  EXPECT_EQ(stack->length, 3);
-  EXPECT_EQ(stack->top, NYK_STACK_EMPTY);
+  EXPECT_TRUE(nyk_stack_chk_cap(stack, 3));
+  EXPECT_TRUE(nyk_stack_chk_pos(stack, NYK_STACK_EMPTY));
 
   int a, b, c, d;
-  signed long rv = nyk_stack_push(stack, &(a = 6));
-  EXPECT_EQ(rv, stack->top);
-  EXPECT_EQ(stack->top, 0);
-  EXPECT_EQ(*(int*)stack->items[stack->top], a);
+  size_t rv = nyk_stack_push(stack, &(a = 6));
+  EXPECT_TRUE(nyk_stack_chk_pos(stack, rv));
+  EXPECT_TRUE(nyk_stack_chk_pos(stack, 0));
+
+  size_t top = nyk_stack_top(stack);
+  int item = *(int*)nyk_stack_item(stack, top);
+  EXPECT_EQ(item, a);
 
   nyk_stack_push(stack, &(b = 8));
-  EXPECT_EQ(stack->top, 1);
-  EXPECT_EQ(*(int*)stack->items[stack->top], b);
+  top = nyk_stack_top(stack);
+  item = *(int*)nyk_stack_item(stack, top);
+  EXPECT_EQ(item, b);
 
-  nyk_stack_push(stack, &(c = 4));
-  EXPECT_EQ(stack->top, 2);
+  nyk_stack_push(stack, &(c = 8));
+  top = nyk_stack_top(stack);
+  item = *(int*)nyk_stack_item(stack, top);
+  EXPECT_EQ(item, c);
 
-   nyk_stack_destroy(stack);
+  nyk_stack_destroy(stack);
 }
+
 
 TEST(StackTest, StackPopOptimist) {
   nyk_stack* stack = nyk_stack_make(4, sizeof(int*));
@@ -45,18 +53,18 @@ TEST(StackTest, StackPopOptimist) {
   int out;
   out = *(int*)nyk_stack_pop(stack);
   EXPECT_EQ(out, 4);
-  EXPECT_EQ(stack->top, 2);
+  EXPECT_EQ(nyk_stack_top(stack), 2);
 
   out = *(int*)nyk_stack_pop(stack);
   EXPECT_EQ(out, 3);
-  EXPECT_EQ(stack->top, 1);
+  EXPECT_EQ(nyk_stack_top(stack), 1);
   
   nyk_stack_push(stack, &(c = 3));
-  EXPECT_EQ(stack->top, 2);
+  EXPECT_EQ(nyk_stack_top(stack), 2);
 
   out = *(int*)nyk_stack_pop(stack);
   EXPECT_EQ(out, 3);
-  EXPECT_EQ(stack->top, 1);
+  EXPECT_EQ(nyk_stack_top(stack), 1);
 
   nyk_stack_destroy(stack);
 }

@@ -1,11 +1,15 @@
 #include "stack.h"
 #include <stdio.h>
 
+typedef struct nsp {
+    size_t length;
+    size_t top;
+    void** items;
+} nyk_stack;
+
 nyk_stack* nyk_stack_make(size_t stack_length, size_t item_size) {
     nyk_stack* stack = malloc(sizeof(nyk_stack));
     void* stack_array = malloc(item_size * stack_length);
-    fprintf(stderr, "create: typesize=%d, capacity=%d, stack_array: %d\n", 
-    (int)item_size, (int)stack_length, (int)sizeof(stack_array));
 
     stack->items = stack_array;
     stack->length = stack_length;
@@ -14,15 +18,29 @@ nyk_stack* nyk_stack_make(size_t stack_length, size_t item_size) {
     return stack;
 }
 
+bool nyk_stack_chk_pos(nyk_stack* stack, size_t val) {
+    return (stack->top == val);
+}
+
+bool nyk_stack_chk_cap(nyk_stack* stack, size_t val) {
+    return (stack->length = val);
+}
+
+size_t nyk_stack_top(nyk_stack* stack) {
+    return stack->top;
+}
+
+void* nyk_stack_item(nyk_stack* stack, size_t index ) {
+    return stack->items[index];
+}
+
 size_t nyk_stack_push(nyk_stack* stack, void* item) {
     stack->top++;
-        fprintf(stderr, "stack top: %d, stack_length: %d, input item: %d\n", (int)stack->top, (int)stack->length, *(int*)item);
 
     if (stack->top < stack->length) {
         stack->items[stack->top] = item;
     }
 
-    fprintf(stderr, "item: %d\n", *(int*)stack->items[stack->top]);
     return stack->top;
 }
 

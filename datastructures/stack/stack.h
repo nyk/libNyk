@@ -9,8 +9,8 @@
  * 
  */
 
-#ifndef _NYK_STACK
-#define _NYK_STACK
+#ifndef NYK_STACK_H
+#define NYK_STACK_H
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -22,14 +22,10 @@
 #define NYK_STACK_EMPTY (-1)
 
 /**
- * @brief 
+ * @brief incomplete type returned from nyk_stack_make()
  * 
  */
-typedef struct {
-    size_t length;
-    size_t top;
-    void** items;
-} nyk_stack;
+typedef struct nsp nyk_stack;
 
 /**
  * @brief constructor to make a new stack object
@@ -39,6 +35,44 @@ typedef struct {
  * @return nyk_stack a new stack object
  */
 nyk_stack* nyk_stack_make(size_t stack_length, size_t item_size);
+
+/**
+ * @brief returns the current position of the stack
+ * 
+ * This is here for testing internal state.
+ * 
+ * @param stack a handle to the stack
+ * @param val a size_t value to compare with the index of the current stack position
+ * @return true if the 
+ */
+bool nyk_stack_chk_pos(nyk_stack* stack, size_t val);
+
+/**
+ * @brief 
+ * 
+ * @param stack 
+ * @param index 
+ * @return void* 
+ */
+void* nyk_stack_item(nyk_stack* stack, size_t index);
+
+/**
+ * @brief 
+ * 
+ * @param stack 
+ * @return size_t 
+ */
+size_t nyk_stack_top(nyk_stack* stack);
+
+/**
+ * @brief returns the capacity of the stack
+ * 
+ * This is mostly here for testing internals
+ * 
+ * @param stack a handle to the stack
+ * @return size_t the capacity of the stack array
+ */
+bool nyk_stack_chk_cap(nyk_stack* stack, size_t val);
 
 /**
  * @brief add a new item to the top of the stack
@@ -66,4 +100,4 @@ void* nyk_stack_pop(nyk_stack* stack);
  */
 bool nyk_stack_destroy(nyk_stack* stack);
 
-#endif // _NYK_STACK
+#endif // NYK_STACK_H
