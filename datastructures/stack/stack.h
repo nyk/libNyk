@@ -13,6 +13,7 @@
 #define _NYK_STACK
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 /**
  * @brief value indicating an empty stack
@@ -25,7 +26,7 @@
  * 
  */
 typedef struct {
-    const size_t length;
+    size_t length;
     size_t top;
     void** items;
 } nyk_stack;
@@ -33,21 +34,20 @@ typedef struct {
 /**
  * @brief constructor to make a new stack object
  * 
+ * @param stack_length the size or capacity of the stack
  * @param item_size the size of each item
- * @param stack_size the size or capacity of the stack
  * @return nyk_stack a new stack object
  */
-nyk_stack nyk_stack_make(size_t item_size, size_t stack_size);
+nyk_stack* nyk_stack_make(size_t stack_length, size_t item_size);
 
 /**
  * @brief add a new item to the top of the stack
  * 
  * @param stack a pointer to a stack object
  * @param item a pointer to a new item to add to the stack
- * @return true if the item was added successfully
- * @return false if the item was not added
+ * @return the index value of the top of the stack array
  */
-bool nyk_stack_push(nyk_stack* stack, void* item);
+size_t nyk_stack_push(nyk_stack* stack, void* item);
 
 /**
  * @brief take an item off from the top of the stack

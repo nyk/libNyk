@@ -1,6 +1,6 @@
 cc_library(
     name = "stack",
-    srcs = ["src/stack.c"],
-    hdrs = ["headers/stack.h"],
+    srcs = ["stack.c"],
+    hdrs = ["stack.h"],
     visibility = ["//visibility:public"],
 )
